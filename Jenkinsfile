@@ -16,14 +16,18 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'npx playwright test'
-                //!bat 'npx playwright test test/file.spec.js '
-                //!bat " npx playwright test --grep-invert file1.spec.js file2.spec.js"
+                withCredentials([file(credentialsId: 'my-secret-file', variable: 'SECRET_FILE')]) {
+                    bat '''
+                        for /f "tokens=2 delims==" %%a in ('findstr "^username=" "%SECRET_FILE%"') do set USERNAME=%%a
+                        for /f "tokens=2 delims==" %%a in ('findstr "^password=" "%SECRET_FILE%"') do set PASSWORD=%%a
+
+                        npx playwright test
+                    '''
+                }
             }
         }
     }
-}  
-
+}
 
 //Scheduling the time in the jenikin is called crom format
 //minitue,hour,day_of_month,Day_of_week
