@@ -18,13 +18,17 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'my-secret-file', variable: 'SECRET_FILE')]) {
                     bat '''
-                        for /f "tokens=2 delims==" %%a in ('findstr "^username=" "%SECRET_FILE%"') do set USERNAME=%%a
-                        for /f "tokens=2 delims==" %%a in ('findstr "^password=" "%SECRET_FILE%"') do set PASSWORD=%%a
-
+                        copy "%SECRET_FILE%" credentials.env
                         npx playwright test
                     '''
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            bat 'if exist credentials.env del credentials.env'
         }
     }
 }
