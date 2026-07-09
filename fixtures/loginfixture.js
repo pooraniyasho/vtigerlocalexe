@@ -3,7 +3,7 @@ import {LoginPage} from  '../pages/login.js';
 import data from '../test-data/login.json';
 import dotenv from 'dotenv';
 
-dotenv.config({ path: './config/credentials.env' });
+dotenv.config({ path: './credentials.env' });
 const username = process.env.USERNAME;
 const password = process.env.PASSWORD;
 export let test= base.extend({
